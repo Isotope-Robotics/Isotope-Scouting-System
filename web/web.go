@@ -14,6 +14,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/Isotope-Robotics/Isotope-Scouting-System/Event"
 	"github.com/Isotope-Robotics/Isotope-Scouting-System/model"
 )
 
@@ -24,6 +25,7 @@ const (
 
 type Web struct {
 	templateHelpers template.FuncMap
+	_event          *Event.Event
 }
 
 func NewWeb() *Web {
@@ -89,7 +91,7 @@ func (web *Web) indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	data := struct {
 		*model.EventSettings
-	}{web.arena.EventSettings}
+	}{web._event.EventSettings}
 	err = template.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		handleWebErr(w, err)
@@ -105,8 +107,9 @@ func addNoCacheHeader(handler http.Handler) http.Handler {
 	})
 }
 
-func (web *Web) newHandler() {
+func (web *Web) newHandler() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", web.indexHandler)
 	return mux
 }
 
@@ -120,7 +123,7 @@ func handleWebErr(w http.ResponseWriter, err error) {
 func (web *Web) parseFiles(filenames ...string) (*template.Template, error) {
 	var paths []string
 	for _, filename := range filenames {
-		paths = append(paths, filepath.Join(model.BaseDir, filename))
+		paths = append(paths, filepath.Join(".", filename))
 	}
 
 	template := template.New("").Funcs(web.templateHelpers)
