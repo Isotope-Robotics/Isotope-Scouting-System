@@ -4,16 +4,20 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"text/template"
 )
 
+var tpl *template.Template
+
 func main() {
-	http.HandleFunc("/hello", handleHelloFunc)
-	http.ListenAndServe(":8081", nil)
+	tpl, _ = template.ParseGlob("templates/*.html")
+
+	http.HandleFunc("/", indexHandler)
+	http.ListenAndServe(":8080", nil)
 }
 
-func handleHelloFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World")
-
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/base.html", "templates/home.html"))
+	tmpl.ExecuteTemplate(w, "base.html", nil)
 }
