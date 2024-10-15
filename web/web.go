@@ -1,4 +1,9 @@
+// Author: pat@patfairbank.com (Patrick Fairbank)
+// Modified for Isotope Robotics by: Ethen Brandenburg
+
 package web
+
+// Handles all Web Server Information
 
 import (
 	"fmt"

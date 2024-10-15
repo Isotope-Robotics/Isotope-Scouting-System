@@ -1,3 +1,6 @@
+// Author: pat@patfairbank.com (Patrick Fairbank)
+// Modified for Isotope Robotics by: Ethen Brandenburg
+
 package main
 
 import (
