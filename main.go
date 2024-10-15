@@ -4,24 +4,16 @@
 package main
 
 import (
-	"log"
-
-	"github.com/Isotope-Robotics/Isotope-Scouting-System/Event"
-	"github.com/Isotope-Robotics/Isotope-Scouting-System/web"
+	"fmt"
+	"net/http"
 )
 
-const httpPort = 8081
-const eventDbPath = "./event.db"
-
 func main() {
+	http.HandleFunc("/hello", handleHelloFunc)
+	http.ListenAndServe(":8081", nil)
+}
 
-	_event, err := Event.NewEvent(eventDbPath)
-	if err != nil {
-		log.Fatalln("Error during startup: ", err)
-	}
+func handleHelloFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello World")
 
-	web := web.NewWeb()
-	go web.ServeWebInterface(httpPort)
-
-	_event.Run()
 }
